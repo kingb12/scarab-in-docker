@@ -106,21 +106,37 @@ COPY ssh_known_hosts /home/${USER}/.ssh/known_hosts
 # Need to set user as owner of their home directory, now that we've populated things
 RUN chown -R ${USER}:${USER} /home/${USER}
 
-# Now continue with all actions as the non-privileged user
-USER ${USER}
-
+USER $USER
 
 RUN wget "https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh"
 RUN bash "Miniconda3-latest-Linux-x86_64.sh" -b -p "/home/${USER}/miniconda"
 RUN miniconda/bin/conda init --all
+
+# change shells to the one we want to use (probably not needed, but verifying it works)
+SHELL ["/usr/bin/zsh", "-c"]
+
+# These can speed up builds that include conda/pip install (like below)
+ENV PIP_CACHE_DIR .cache/buildkit/pip
+RUN mkdir -p $PIP_CACHE_DIR
+
+ENV PATH="/home/${USER}/miniconda/bin:${PATH}"
 
 # sone final setup: add this lint to the top of each shell file to turn off output in interactive modes
 # this is required for SFTP to work
 RUN echo "[[ "$-" != *i* ]] && return" > .bashrc
 RUN sed -i '1s/^/[[ "$-" != *i* ]] \&\& return\n/' .zshrc
 
+
+# Set up a conda environment for this project and activate it and install torch and related libraries, then requirements
+RUN --mount=type=cache,target=/opt/conda/pkgs conda init zsh && conda create python=3.6.3 --prefix venv
+
+# conda init is needed before activation, but only takes effect after shell restart. Since each new Dockerfile line
+# runs in a new shell instance, this doesn't actually take effect as expected. Instead, we'll change our shell to the
+# one installed in the conda environment itself. Make RUN commands use the new environment:
+SHELL ["conda", "run", "-p", "./venv", "/bin/bash", "-c"]
+
 ## Actual Scarab Setup:
-COPY pinplay-drdebug-3.5-pin-3.5-97503-gac534ca30-gcc-linux-20230412T030035Z-001.zip /home/${USER}
+RUN --mount=type=cache,target=.cache/buildkit/pip pip install gdown && gdown "https://drive.google.com/file/d/19flaVdjO9xpzdRPFXZUUECdT4Br7gzHa/view?usp=share_link"
 
 # Install g++, clang
 #RUN --mount=type=cache,target=/opt/conda/pkgs conda install --yes -c conda-forge gxx clang
