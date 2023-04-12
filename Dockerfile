@@ -111,10 +111,6 @@ RUN sudo usermod -aG sudo ${USER} && passwd -d ${USER}
 
 USER $USER
 
-RUN wget "https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh"
-RUN bash "Miniconda3-latest-Linux-x86_64.sh" -b -p "/home/${USER}/miniconda"
-RUN miniconda/bin/conda init --all
-
 # change shells to the one we want to use (probably not needed, but verifying it works)
 SHELL ["/usr/bin/zsh", "-c"]
 
@@ -122,40 +118,30 @@ SHELL ["/usr/bin/zsh", "-c"]
 ENV PIP_CACHE_DIR .cache/buildkit/pip
 RUN mkdir -p $PIP_CACHE_DIR
 
-ENV PATH="/home/${USER}/miniconda/bin:${PATH}"
 
 # sone final setup: add this lint to the top of each shell file to turn off output in interactive modes
 # this is required for SFTP to work
 RUN echo "[[ "$-" != *i* ]] && return" > .bashrc
 RUN sed -i '1s/^/[[ "$-" != *i* ]] \&\& return\n/' .zshrc
 
-
-# Set up a conda environment for this project and activate it and install torch and related libraries, then requirements
-RUN --mount=type=cache,target=/opt/conda/pkgs conda init zsh && conda create python=3.6.3 --prefix venv
-
-# conda init is needed before activation, but only takes effect after shell restart. Since each new Dockerfile line
-# runs in a new shell instance, this doesn't actually take effect as expected. Instead, we'll change our shell to the
-# one installed in the conda environment itself. Make RUN commands use the new environment:
-SHELL ["conda", "run", "-p", "./venv", "/bin/bash", "-c"]
-
 ## Actual Scarab Setup:
-RUN --mount=type=cache,target=.cache/buildkit/pip pip install gdown && gdown "https://drive.google.com/file/d/19flaVdjO9xpzdRPFXZUUECdT4Br7gzHa/view?usp=share_link"
+# installs gcc, g++, make, etc.
+RUN sudo apt install build-essential -y
+RUN sudo apt install libconfig++-dev -y && sudo apt-get install zlib1g-dev -y
+RUN sudo apt install libsnappy-dev -y
+RUN sudo apt-get install libpthread-stubs0-dev -y
+RUN sudo apt install clang cmake python3 python3-pip zip -y
 
-# Install g++, clang
-#RUN --mount=type=cache,target=/opt/conda/pkgs conda install --yes -c conda-forge gxx clang
+ENV PATH=/usr/lib/python3/dist-packages:$PATH
+RUN echo $PATH
+RUN sudo pip3 install gdown && gdown 19flaVdjO9xpzdRPFXZUUECdT4Br7gzHa
+RUN unzip pinplay-drdebug-3.5-pin-3.5-97503-gac534ca30-gcc-linux-20230412T030035Z-001.zip
 
-# Clone and install scarab, requirements.txt
-#RUN git clone https://github.com/hpsresearchgroup/scarab.git
-#RUN --mount=type=cache,target=.cache/buildkit/pip pip install -r scarab/bin/requirements.txt
+ENV PIN_ROOT=/home/${USER}/pinplay-drdebug-3.5-pin-3.5-97503-gac534ca30-gcc-linux
+ENV SCARAB_ENABLE_MEMTRACE=1
 
-# Install memtrace requirements
-#RUN --mount=type=cache,target=/opt/conda/pkgs conda install --yes -c conda-forge compiler-rt libconfig cmake unzip snappy make
-
-# unzip pinplay
-#RUN unzip pinplay-drdebug-3.5-pin-3.5-97503-gac534ca30-gcc-linux-20230412T030035Z-001.zip
-
-# compile
-#ENV PIN_ROOT=/home/${USER}/pinplay-drdebug-3.5-pin-3.5-97503-gac534ca30-gcc-linux
-
-
+RUN git clone --recurse-submodules https://github.com/hpsresearchgroup/scarab.git
+RUN pip3 install -r scarab/bin/requirements.txt
+RUN cd scarab/src && make
+RUN sudo python utils/qsort/scarab_test_qsort.py test_out
 CMD ["/usr/sbin/sshd","-D", "-f", "/opt/ssh/sshd_config",  "-E", "/tmp/sshd.log"]

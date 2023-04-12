@@ -1,0 +1,133 @@
+  1  conda install -c "conda-forge/label/gcc7" gxx_linux-64
+    2  conda install -c "conda-forge/label/gcc7" gxx_linux-64 -y
+    3  which gcc
+    4  which g++
+    5  gcc
+    6  which gcc
+    7  sudo apt-get install software-properties-common -y && \\n    sudo add-apt-repository ppa:ubuntu-toolchain-r/test && \\n    sudo apt update && \\n    sudo apt install g++-7 -y
+    8  g++
+    9  sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-7 60 \\n                         --slave /usr/bin/g++ g++ /usr/bin/g++-7 && \\n    sudo update-alternatives --config gcc && \\n    gcc --version && \\n    g++ --version
+   10  g++
+   11  which g++
+   12  g++ --version
+   13  sudo apt-get install -y clang-5.0
+   14  sudo apt-get install -y libclang-5.0
+   15  sudo apt-get install -y libclang=5.0
+   16  gdown "https://drive.google.com/file/d/19flaVdjO9xpzdRPFXZUUECdT4Br7gzHa/view?usp=share_link"
+   17  conda activate ./venv
+   18  gdown "https://drive.google.com/file/d/19flaVdjO9xpzdRPFXZUUECdT4Br7gzHa/view?usp=share_link"
+   19  gdown "https://drive.google.com/file/d/19flaVdjO9xpzdRPFXZUUECdT4Br7gzHa"
+   20  ls
+   21  gdown https://drive.google.com/file/d/19flaVdjO9xpzdRPFXZUUECdT4Br7gzHa/view\?usp\=sharing
+   22  ls
+   23  gdown "https://drive.google.com/file/d/19flaVdjO9xpzdRPFXZUUECdT4Br7gzHa/view"
+   24  gdown "https://drive.google.com/file/d/19flaVdjO9xpzdRPFXZUUECdT4Br7gzHa/"
+   25  gdown "https://drive.google.com/file/d/19flaVdjO9xpzdRPFXZUUECdT4Br7gzHa"
+   26  gdown 19flaVdjO9xpzdRPFXZUUECdT4Br7gzHa
+   27  wget https://releases.llvm.org/5.0.1/clang+llvm-5.0.1-x86_64-linux-gnu-ubuntu-16.04.tar.xz
+   28  tar xvf clang+llvm-5.0.1-x86_64-linux-gnu-ubuntu-16.04.tar.xz
+   29  cd clang+llvm-5.0.1-x86_64-linux-gnu-ubuntu-16.04
+   30  ls
+   31  cd bin
+   32  ;s
+   33  ls
+   34  clang
+   35  ./clang
+   36  ./clang++
+   37  ./clang --version
+   38  rm -rf clang+llvm-5.0.1-x86_64-linux-gnu-ubuntu-16.04
+   39  deb http://apt.llvm.org/xenial/ llvm-toolchain-xenial-5.0 main\n
+   40  sudo apt-get install clang-5.0 lldb-5.0 lld-5.0
+   41  wget Clang source code
+   42  wget https://releases.llvm.org/5.0.1/cfe-5.0.1.src.tar.xz
+   43  tar xvf cfe-5.0.1.src.tar.xz
+   44  cd cfe-5.0.1.src
+   45  ./configure
+   46  make install
+   47  cd ..
+   48  rm -rf cfe-5.0.1.src
+   49  sudo apt install clang cmake  python3
+   50  g++ --version
+   51  sudo apt install snappy compiler-rt
+   52  sudo apt install libsnappy compiler-rt
+   53  sudo apt install libsnappy-dev
+   54  sudo apt-get install libpthread-stubs0-dev
+   55  gcc -pthread
+   56  git clone https://github.com/hpsresearchgroup/scarab.git
+   57  cd scarab/bin
+   58  which pip
+   59  pip3 install -r requirements.txt
+   60  cd ../
+   61  make
+   62  gzip
+   63  export SCARAB_ENABLE_MEMTRACE=1
+   64  pwd
+   65  make
+   66  cd src
+   67  make
+   68  cd ../..
+   69  ls
+   70  unzip pinplay-drdebug-3.5-pin-3.5-97503-gac534ca30-gcc-linux-20230412T030035Z-001.zip
+   71  $ sudo apt install zip
+   72  sudo apt install zip\n
+   73  unzip pinplay-drdebug-3.5-pin-3.5-97503-gac534ca30-gcc-linux-20230412T030035Z-001.zip
+   74  pwd
+   75  export PIN_ROOT=/home/bking2/pinplay-drdebug-3.5-pin-3.5-97503-gac534ca30-gcc-linux"\n"
+   76  export PIN_ROOT=/home/bking2/pinplay-drdebug-3.5-pin-3.5-97503-gac534ca30-gcc-linux
+   77  make
+   78  cd scarab/src
+   79  make
+   80  ls
+   81  cd deps
+   82  ls
+   83  cd xed
+   84  ls
+   85  cd ..
+   86  ./xed
+   87  cd ../..
+   88  rm -rf scarab
+   89  git clone --recurse-submodules https://github.com/hpsresearchgroup/scarab.git
+   90  cd scarab/src
+   91  make
+   92  which g++
+   93  which gcc
+   94  gcc --version
+   95  which python
+   96  conda activate ~/venv
+   97  which gcc
+   98  which g++
+   99  g++ --version
+  100  glibc
+  101  sudo apt install glibc\n
+  102  ldd --version
+  103  strings /usr/lib/x86_64-linux-gnu/libstdc++.so.6 | grep GLIBCXX
+  104  sudo apt install build-essentials -y\n
+  105  sudo apt-get update
+  106  sudo apt install build-essentials -y\n
+  107  sudo apt install build-essential -y\n
+  108  which g++
+  109  g++ --version
+  110  make
+  111  sudo apt install lconfig\n
+  112  sudo apt install lconfig++\n
+  113  sudo ldconfig\n
+  114  sudo apt install libconfig++-dev\n
+  115  make
+  116  sudo apt-get install zlib1g-dev
+  117  make
+  118  cd ~
+  119  gdown --folder 1U-ir4pTKLkswWZHs_PYgjnmsVqEmfgg2
+  120  cd scarab
+  121  python ./bin/scarab_test_qsort.py path_to_results_directory gg ./utils/qsort/ref_stats
+  122  ls
+  123  python utils/qsort/scarab_test_qsort.py test_out
+  124  cat bin/requirements.txt
+  125  which pip
+  126  conda deactivate
+  127  python utils/qsort/scarab_test_qsort.py test_out
+  128  sudo python utils/qsort/scarab_test_qsort.py test_out
+  129  cat ~/.zsh_history
+  130  less ~/.zsh_history
+  131  echo $HISTFLE
+  132  history
+  133  history 0
