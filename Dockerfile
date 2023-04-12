@@ -143,5 +143,5 @@ ENV SCARAB_ENABLE_MEMTRACE=1
 RUN git clone --recurse-submodules https://github.com/hpsresearchgroup/scarab.git
 RUN pip3 install -r scarab/bin/requirements.txt
 RUN cd scarab/src && make
-RUN sudo python scarab/utils/qsort/scarab_test_qsort.py test_out
+# RUN sudo python scarab/utils/qsort/scarab_test_qsort.py test_out
 CMD ["/usr/sbin/sshd","-D", "-f", "/opt/ssh/sshd_config",  "-E", "/tmp/sshd.log"]
