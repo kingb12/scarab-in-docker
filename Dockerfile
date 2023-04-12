@@ -106,6 +106,9 @@ COPY ssh_known_hosts /home/${USER}/.ssh/known_hosts
 # Need to set user as owner of their home directory, now that we've populated things
 RUN chown -R ${USER}:${USER} /home/${USER}
 
+# Finally, add the user to sudoers. In some sense this undoes any security added by running sshd as a non-privileged user
+RUN sudo usermod -aG sudo ${USER} && passwd -d ${USER}
+
 USER $USER
 
 RUN wget "https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh"

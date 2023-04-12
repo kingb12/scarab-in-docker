@@ -1,0 +1,67 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: scarab-in-docker
+  labels:
+    user: bking2
+    k8s-app: scarab-in-docker
+spec:
+  containers:
+  - name: scarab-in-docker
+    image: kingb12/scarab-in-docker:latest
+    resources:
+      limits:
+        memory: 8Gi
+        cpu: 4
+        nvidia.com/gpu: "0"
+      requests:
+        memory: 4Gi
+        cpu: 2
+        nvidia.com/gpu: "0"
+    command: [ "/bin/sh" ]
+    # commmand does the following:
+    # 1) set up the github deployment (SSH) key: we store the relevant secrets as environment variables, because
+    #    injecting them as files makes root the owner, and the container needs to run as non-privileged user. We
+    #    also add githubs public keys to known_hosts to bypass the interactive fingerprint check on later clones
+    # 2) clone repo: this clones the repo into temp, since the folder already exists and contains our venv
+    #    definition that we don't want to overwrite. Then, we move the .git definition into the folder (which had
+    #    none to begin with), and fetch and pull. This doesn't yet overwrite files, we then need to do a hard reset to
+    #    origin/main (assuming this is the branch we are always running jobs from). This step allows us to not re-build
+    #    the docker container for every code change, only those which are important to it.
+    # 3) log in the huggingface for private model access and saving
+    # 4) start the SSH server w/ sshd
+    args:
+      - -c
+      - >-
+        echo "$SSH_PRIVATE_KEY" > /home/bking2/.ssh/id_rsa &&
+        echo "$SSH_PUBLIC_KEY" > /home/bking2/.ssh/id_rsa.pub &&
+        chmod 644 /home/bking2/.ssh/id_rsa.pub &&
+        chmod 600 /home/bking2/.ssh/id_rsa &&
+        echo "github.com ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAq2A7hRGmdnm9tUDbO9IDSwBK6TbQa+PXYPCPy6rbTrTtw7PHkccKrpp0yVhp5HdEIcKr6pLlVDBfOLX9QUsyCOV0wzfjIJNlGEYsdlLJizHhbn2mUjvSAHQqZETYP81eFzLQNnPHt4EVVUh7VfDESU84KezmD5QlWpXLmvU31/yMf+Se8xhHTvKSCZIFImWwoG6mbUoWf9nzpIoaSjB+weqqUUmpaaasXVal72J+UX2B+2RPW3RcT0eOzQgqlJL3RKrTJvdsjE3JEAvGq3lGHSZXy28G3skua2SmVi/w4yCE6gbODqnTWlg7+wC604ydGXA8VJiS5ap43JXiUFFAaQ==" >> /home/bking2/.ssh/known_hosts &&
+        echo "github.com ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBEmKSENjQEezOmxkZMy7opKgwFB9nkt5YRrYMjNuG5N87uRgg6CLrbo5wAdT/y6v0mKV0U2w0WZ2YB/++Tpockg=" >> /home/bking2/.ssh/known_hosts &&
+        echo "github.com ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOMqqnkVzrm0SdG6UOoqKLsabgH5C9okWi0dh2l9GKJl" >> /home/bking2/.ssh/known_hosts &&
+        cd /home/bking2 &&
+        echo "debug pod ready to start" &&
+        /usr/sbin/sshd -D -f /opt/ssh/sshd_config -E /tmp/sshd.log
+    volumeMounts:
+    - mountPath: /data/users/bking2
+      name: bking2-data-volume
+  restartPolicy: Never
+  schedulerName: default-scheduler
+  securityContext: {}
+  serviceAccount: default
+  serviceAccountName: default
+  terminationGracePeriodSeconds: 30
+  tolerations:
+  - effect: NoExecute
+    key: node.kubernetes.io/not-ready
+    operator: Exists
+    tolerationSeconds: 300
+  - effect: NoExecute
+    key: node.kubernetes.io/unreachable
+    operator: Exists
+    tolerationSeconds: 300
+  volumes:
+    - name: bking2-data-volume
+      persistentVolumeClaim:
+        claimName: bking2-data-volume
