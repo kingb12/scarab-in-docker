@@ -142,6 +142,6 @@ ENV SCARAB_ENABLE_MEMTRACE=1
 
 RUN git clone --recurse-submodules https://github.com/hpsresearchgroup/scarab.git
 RUN pip3 install -r scarab/bin/requirements.txt
-RUN cd scarab/src && make
+RUN cd scarab/src && make && chmod +x /home/${USER}/pinplay-drdebug-3.5-pin-3.5-97503-gac534ca30-gcc-linux/pin
 # RUN sudo python scarab/utils/qsort/scarab_test_qsort.py test_out
 CMD ["/usr/sbin/sshd","-D", "-f", "/opt/ssh/sshd_config",  "-E", "/tmp/sshd.log"]
