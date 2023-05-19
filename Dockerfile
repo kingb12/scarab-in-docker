@@ -117,6 +117,11 @@ RUN echo "PIN_ROOT=\"${PIN_ROOT}\"" >> /etc/environment
 RUN echo "SCARAB_ENABLE_MEMTRACE=\"${SCARAB_ENABLE_MEMTRACE}\"" >> /etc/environment
 RUN cat /etc/environment
 
+# add startup script while still root user
+ADD start.sh /
+RUN sudo chmod +x /start.sh
+
+# switch to non privileged user
 USER $USER
 
 # change shells to the one we want to use (probably not needed, but verifying it works)
@@ -151,8 +156,7 @@ RUN pip3 install -r scarab/bin/requirements.txt
 RUN cd scarab/src && make && chmod +x /home/${USER}/pinplay-drdebug-3.5-pin-3.5-97503-gac534ca30-gcc-linux/pin
 
 # add CLION
-
 RUN sudo apt install snapd -y && sudo snap install clion --classic
 
 # RUN sudo python scarab/utils/qsort/scarab_test_qsort.py test_out
-CMD ["/usr/sbin/sshd","-D", "-f", "/opt/ssh/sshd_config",  "-E", "/tmp/sshd.log"]
+CMD ["/start.sh"]
