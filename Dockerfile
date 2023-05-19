@@ -109,6 +109,14 @@ RUN chown -R ${USER}:${USER} /home/${USER}
 # Finally, add the user to sudoers. In some sense this undoes any security added by running sshd as a non-privileged user
 RUN sudo usermod -aG sudo ${USER} && passwd -d ${USER}
 
+ENV PIN_ROOT=/home/${USER}/pinplay-drdebug-3.5-pin-3.5-97503-gac534ca30-gcc-linux
+ENV SCARAB_ENABLE_MEMTRACE=1
+
+# set these as permanent environment variables:
+RUN echo "PIN_ROOT=\"${PIN_ROOT}\"" >> /etc/environment
+RUN echo "SCARAB_ENABLE_MEMTRACE=\"${SCARAB_ENABLE_MEMTRACE}\"" >> /etc/environment
+RUN cat /etc/environment
+
 USER $USER
 
 # change shells to the one we want to use (probably not needed, but verifying it works)
@@ -137,13 +145,6 @@ RUN echo $PATH
 RUN sudo pip3 install gdown && gdown 19flaVdjO9xpzdRPFXZUUECdT4Br7gzHa
 RUN unzip pinplay-drdebug-3.5-pin-3.5-97503-gac534ca30-gcc-linux-20230412T030035Z-001.zip
 
-ENV PIN_ROOT=/home/${USER}/pinplay-drdebug-3.5-pin-3.5-97503-gac534ca30-gcc-linux
-ENV SCARAB_ENABLE_MEMTRACE=1
-
-# set these as permanent environment variables:
-RUN echo "PIN_ROOT=\"${PIN_ROOT}\"" >> /etc/environment
-RUN echo "SCARAB_ENABLE_MEMTRACE=\"${SCARAB_ENABLE_MEMTRACE}\"" >> /etc/environment
-RUN cat /etc/environment
 
 RUN git clone --recurse-submodules https://github.com/hpsresearchgroup/scarab.git
 RUN pip3 install -r scarab/bin/requirements.txt
