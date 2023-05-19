@@ -140,6 +140,11 @@ RUN unzip pinplay-drdebug-3.5-pin-3.5-97503-gac534ca30-gcc-linux-20230412T030035
 ENV PIN_ROOT=/home/${USER}/pinplay-drdebug-3.5-pin-3.5-97503-gac534ca30-gcc-linux
 ENV SCARAB_ENABLE_MEMTRACE=1
 
+# set these as permanent environment variables:
+RUN echo "PIN_ROOT=\"${PIN_ROOT}\"" >> /etc/environment
+RUN echo "SCARAB_ENABLE_MEMTRACE=\"${SCARAB_ENABLE_MEMTRACE}\"" >> /etc/environment
+RUN cat /etc/environment
+
 RUN git clone --recurse-submodules https://github.com/hpsresearchgroup/scarab.git
 RUN pip3 install -r scarab/bin/requirements.txt
 RUN cd scarab/src && make && chmod +x /home/${USER}/pinplay-drdebug-3.5-pin-3.5-97503-gac534ca30-gcc-linux/pin
