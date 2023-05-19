@@ -152,7 +152,7 @@ RUN cd scarab/src && make && chmod +x /home/${USER}/pinplay-drdebug-3.5-pin-3.5-
 
 # add CLION
 
-RUN sudo snap install clion --classic
+RUN sudo apt install snapd -y && sudo snap install clion --classic
 
 # RUN sudo python scarab/utils/qsort/scarab_test_qsort.py test_out
 CMD ["/usr/sbin/sshd","-D", "-f", "/opt/ssh/sshd_config",  "-E", "/tmp/sshd.log"]
