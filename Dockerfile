@@ -156,7 +156,7 @@ RUN pip3 install -r scarab/bin/requirements.txt
 RUN cd scarab/src && make && chmod +x /home/${USER}/pinplay-drdebug-3.5-pin-3.5-97503-gac534ca30-gcc-linux/pin
 
 # add CLION
-RUN sudo apt install snapd -y && sudo snap install clion --classic
+# RUN sudo apt install snapd -y && sudo snap install clion --classic
 
 # RUN sudo python scarab/utils/qsort/scarab_test_qsort.py test_out
 CMD ["/start.sh"]
